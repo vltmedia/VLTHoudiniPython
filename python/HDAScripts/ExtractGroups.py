@@ -152,13 +152,13 @@ def Extract_groupsInternalSeperate(kwargs):
                 geocreated.append(merge)
                 filescreated.append(newnulll)
                 
-    print(objparent)
+    # print(objparent)
     obj.layoutChildren(items=(geocreated), horizontal_spacing=2.0, vertical_spacing=-1.0)
     networkbox = objparent.createNetworkBox(groups[0].name())
     networkbox.setComment(groups[0].name())
     # hou.node('/obj').layoutChildren(items=(), horizontal_spacing=2.0, vertical_spacing=-1.0)
     for objj in geocreated:
-        print(objj.name())
+        # print(objj.name())
         networkbox.addItem(objj)
     message = "Succesfullly created : " + str(len(filescreated)) + " object level geometry! All new Geo is located in the " + groups[0].name() + " subnet";
     
@@ -224,7 +224,7 @@ def Extract_groupsInternalSubnet(kwargs):
 
                 filescreated.append(newnulll)
                 
-    print(objparent)
+    # print(objparent)
     hou.node(parentpath).layoutChildren(items=(geocreated), horizontal_spacing=2.0, vertical_spacing=-1.0)
     # networkbox = objparent.createNetworkBox(groups[0].name())
     # networkbox.setComment(groups[0].name())
@@ -234,7 +234,7 @@ def Extract_groupsInternalSubnet(kwargs):
     #     networkbox.addItem(objj)
     subnett = hou.node(parentpath).collapseIntoSubnet(geocreated, subnet_name=groups[0].name())
     subnett.moveToGoodPosition(False, False,False, False)
-    message = "Succesfullly created : " + str(len(filescreated)) + " object level geometry! All new Geo is located in this Geo Node";
+    message = "Succesfullly created : " + str(len(filescreated)) + " object level geometry! All new Geo is located in the subnet : " + groups[0].name();
     
     hou.ui.displayMessage(message,title='Success!')
     
