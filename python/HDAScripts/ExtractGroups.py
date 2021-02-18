@@ -102,6 +102,7 @@ def Extract_groupsInternalSeperate(kwargs):
     parentpath = GetParentNode(kwargs)
     nodeToCopy = [hou.node(nodee.evalParm('Material_Template'))]
     node = hou.node(nodee.evalParm('Node_To_Split'))
+
     if nodee.evalParm('Use_FBX_Import') == 1:
         node = hou.node(nodee.evalParm('InternalNode_To_Split'))
     # node = selected_nodes[0]
@@ -113,7 +114,18 @@ def Extract_groupsInternalSeperate(kwargs):
     
     objparent  = hou.node(parentpath)
     switch = objgeo.createNode('switch')
-    geocreated.append(switch)
+    funnelmops = False
+
+    mops = objgeo.createNode('MOPS::Instancer::1.4')
+    if nodee.evalParm('Funnel_to_MOPS') == 1:
+        funnelmops = 1;
+        geocreated.append(mops)
+    else:
+        geocreated.append(switch)
+        
+
+        
+        
     
     # print(groups)
     count = 0
@@ -133,7 +145,11 @@ def Extract_groupsInternalSeperate(kwargs):
                 newnulll = obj.createNode('null', 'null_' +group.name())
                 # output.setInput(0,thing)
                 newnulll.setInput(0, thing)
-                switch.setInput(count, newnulll)
+                if funnelmops == False:
+                    switch.setInput(count, newnulll)
+                else:
+                    mops.setInput(count, newnulll)
+                    
                 count += 1
                 geocreated.append(newnulll)
                 geocreated.append(merge)
@@ -146,7 +162,10 @@ def Extract_groupsInternalSeperate(kwargs):
                 newnulll = obj.createNode('null', 'null_' +group.name())
                 # output.setInput(0,thing)
                 newnulll.setInput(0, merge)
-                switch.setInput(count, newnulll)
+                if funnelmops == False:
+                    switch.setInput(count, newnulll)
+                else:
+                    mops.setInput(count, newnulll)
                 count += 1
                 geocreated.append(newnulll)
                 geocreated.append(merge)
@@ -154,13 +173,18 @@ def Extract_groupsInternalSeperate(kwargs):
                 
     # print(objparent)
     obj.layoutChildren(items=(geocreated), horizontal_spacing=2.0, vertical_spacing=-1.0)
+    if funnelmops == True:
+        switch.destroy()
+    else:
+        mops.destroy()
     networkbox = objparent.createNetworkBox(groups[0].name())
     networkbox.setComment(groups[0].name())
+
     # hou.node('/obj').layoutChildren(items=(), horizontal_spacing=2.0, vertical_spacing=-1.0)
     for objj in geocreated:
         # print(objj.name())
         networkbox.addItem(objj)
-    message = "Succesfullly created : " + str(len(filescreated)) + " object level geometry! All new Geo is located in the " + groups[0].name() + " subnet";
+    message = "Succesfullly created : " + str(len(filescreated)) + " object level geometry! All new Geo is located in this node! " ;
     
     hou.ui.displayMessage(message,title='Success!')
     
@@ -182,9 +206,22 @@ def Extract_groupsInternalSubnet(kwargs):
     
     objparent  = hou.node(parentpath)
     switch = objgeo.createNode('switch')
-    geocreated.append(switch)
+    funnelmops = False
     output = objgeo.createNode('output')
-    output.setInput(0,switch)
+
+    mops = objgeo.createNode('MOPS::Instancer::1.4')
+    if nodee.evalParm('Funnel_to_MOPS') == 1:
+        funnelmops = 1;
+        geocreated.append(mops)
+        output.setInput(0,mops)
+    else:
+        geocreated.append(switch)
+        
+        output.setInput(0,switch)
+        
+        
+        
+        
     geocreated.append(output)
     
     # print(groups)
@@ -202,7 +239,10 @@ def Extract_groupsInternalSubnet(kwargs):
                 thing.setName('material_' +group.name())
                 newnulll = obj.createNode('null', 'null_' +group.name())
                 newnulll.setInput(0, thing)
-                switch.setInput(count, newnulll)
+                if funnelmops == False:
+                    switch.setInput(count, newnulll)
+                else:
+                    mops.setInput(count, newnulll)
                 
                 
                 count += 1
@@ -215,7 +255,10 @@ def Extract_groupsInternalSubnet(kwargs):
             
                 newnulll = obj.createNode('null', 'null_' +group.name())
                 newnulll.setInput(0, merge)
-                switch.setInput(count, newnulll)
+                if funnelmops == False:
+                    switch.setInput(count, newnulll)
+                else:
+                    mops.setInput(count, newnulll)
                 
                 
                 count += 1
@@ -225,7 +268,12 @@ def Extract_groupsInternalSubnet(kwargs):
                 filescreated.append(newnulll)
                 
     # print(objparent)
+
     hou.node(parentpath).layoutChildren(items=(geocreated), horizontal_spacing=2.0, vertical_spacing=-1.0)
+    if funnelmops == True:
+        switch.destroy()
+    else:
+        mops.destroy()
     # networkbox = objparent.createNetworkBox(groups[0].name())
     # networkbox.setComment(groups[0].name())
     # hou.node('/obj').layoutChildren(items=(), horizontal_spacing=2.0, vertical_spacing=-1.0)
