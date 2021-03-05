@@ -53,13 +53,17 @@ def Extract_groups(kwargs):
     node = hou.node(nodee.evalParm('Node_To_Split'))
     if nodee.evalParm('Use_FBX_Import') == 1:
         node = hou.node(nodee.evalParm('InternalNode_To_Split'))
+    node = hou.node(nodee.evalParm('InternalNode_To_Split'))
     # node = selected_nodes[0]
     geocreated = []
     groups = node.geometry().primGroups()
+    # print(groups)
 
     objgeo = hou.node('/obj')
     # print(groups)
     for group in groups:
+        # print(groups)
+        
         if CompareGroupItem(group.name(), GroupsToIgnore) == True:
             obj = hou.node('/obj').createNode("geo", group.name())
             output = obj.createNode('output')
@@ -105,6 +109,7 @@ def Extract_groupsInternalSeperate(kwargs):
 
     if nodee.evalParm('Use_FBX_Import') == 1:
         node = hou.node(nodee.evalParm('InternalNode_To_Split'))
+    node = hou.node(nodee.evalParm('InternalNode_To_Split'))
     # node = selected_nodes[0]
     geocreated = []
     filescreated = []
@@ -131,6 +136,7 @@ def Extract_groupsInternalSeperate(kwargs):
     count = 0
     obj = objparent
     for group in groups:
+        
         if CompareGroupItem(group.name(), GroupsToIgnore) == True:
             
             output = obj.createNode('output')
@@ -197,9 +203,16 @@ def Extract_groupsInternalSubnet(kwargs):
     node = hou.node(nodee.evalParm('Node_To_Split'))
     if nodee.evalParm('Use_FBX_Import') == 1:
         node = hou.node(nodee.evalParm('InternalNode_To_Split'))
+    node = hou.node(nodee.evalParm('InternalNode_To_Split'))
     # node = selected_nodes[0]
     geocreated = []
     filescreated = []
+    # print("``````````````````")
+    # print(nodee.parm('Node_To_Split').eval())
+    # print(nodee.evalParm('Node_To_Split'))
+    # print("``````````````````")
+    
+    # print(node)
     groups = node.geometry().primGroups()
 
     objgeo = hou.node(parentpath[:-1])
@@ -227,6 +240,7 @@ def Extract_groupsInternalSubnet(kwargs):
     # print(groups)
     count = 0
     for group in groups:
+        # print(group)
         if CompareGroupItem(group.name(), GroupsToIgnore) == True:
             obj = objgeo
             merge = obj.createNode('object_merge', 'objectmerge_' +group.name())
@@ -318,6 +332,21 @@ def ScanLoadFiles(kwargs):
         sendfiles.append(files[i].replace('\\', "/"))
     return sendfiles
     # print(files)
-    
+def Extract_groupsb(kwargs):
+    nodee = kwargs["node"]
+    GroupsToIgnore = IterateMaterial(kwargs)
+    parentpath = GetParentNode(kwargs)
+    nodeToCopy = [hou.node(nodee.evalParm('Material_Template'))]
+    node = hou.node(nodee.evalParm('Node_To_Split'))
+    # if nodee.evalParm('Use_FBX_Import') == 1:
+    node = hou.node(nodee.evalParm('Node_To_Split'))
+    # node = selected_nodes[0]
+    geocreated = []
+    filescreated = []
+    groups = node.geometry().primGroups()
+    print(node.geometry().primAttribs())
+    print(node.geometry().globalAttribs())
+    print(node)
+    print(groups)
     
            
