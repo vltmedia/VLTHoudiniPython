@@ -1,0 +1,16 @@
+if(@ptnum == 0){
+i@group_EndPoints = 1;
+}
+int lastcount = len(primpoints(0,@primnum)) - 1;
+
+if(@ptnum == lastcount ){
+i@group_EndPoints = 1;
+}
+
+
+
+int successa, successb;
+successa = pointattrib(0, "P", 0,successa);
+vector Pa = point(0, "P", 0);
+v@StartPoint =point(0, "P", 0);
+v@EndPoint =point(0, "P", @numpt - 1);
